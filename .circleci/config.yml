@@ -44,7 +44,7 @@ jobs:
       - save_cache:
           key: dependency-cache-{{ checksum "yarn.lock" }}
           paths:
-            - ./node_modules
+            - ~/graphql-todo-sample/node_modules
   
   test:
     executor:
