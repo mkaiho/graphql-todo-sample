@@ -37,7 +37,7 @@ jobs:
       - restore_npm
       - run:
           name: update-npm
-          command: "sudo npm install -g yarn@latest"
+          command: "npm install -g yarn@latest"
       - run:
           name: install-dependencies
           command: yarn install
