@@ -37,7 +37,7 @@ jobs:
       - restore_npm
       - run:
           name: update-npm
-          command: "sodo npm install -g yarn@latest"
+          command: "npm install -g yarn@latest"
       - run:
           name: install-dependencies
           command: yarn install
@@ -52,6 +52,9 @@ jobs:
     steps:
       - restore_code
       - restore_npm
+      - run:
+          name: confirm
+          command: ls
       - run:
           name: test
           command: yarn test
