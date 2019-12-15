@@ -57,7 +57,7 @@ jobs:
           command: pwd
       - run:
           name: confirm
-          command: ls
+          command: "ls ~/graphql-todo-sample"
       - run:
           name: test
           command: yarn test
