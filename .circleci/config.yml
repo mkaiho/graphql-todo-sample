@@ -20,7 +20,7 @@ jobs:
       - restore_npm
       - run:
           name: Install dependencies
-          command: npm install
+          command: yarn install
       - save_cache:
           name: Cache npm dependencies
           key: dependency-{{ checksum "yarn.lock" }}
@@ -34,7 +34,7 @@ jobs:
       - restore_npm
       - run:
           name: Run test
-          command: npm run test
+          command: yarn test
 workflows:
   version: 2.1
   build_and_test:
