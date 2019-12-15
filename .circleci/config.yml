@@ -1,29 +1,59 @@
-version: 2
+version: 2.1
 jobs:
+  checkout_code:
+    docker:
+      - image: circleci/node:12-stretch
+    working_directory: ~/graphql-todo-sample
+    steps:
+      - restore_cache:
+          key: source-v1-{{ .Branch }}-{{ .Revision }}
+      - checkout
+      - save_cache:
+          key: source-v1-{{ .Branch }}-{{ .Revision }}
+          paths:
+            - ~/graphql-todo-sample
+
   build:
     docker:
-      - image: circleci/node:11.14.0
-
-    working_directory: ~/repo
-
+      - image: circleci/node:12-stretch
+    working_directory: ~/graphql-todo-sample
     steps:
-      - checkout
-      - run:
-          name: update-npm
-          command: "sudo npm install -g yarn@latest"
-
+      - restore_cache:
+          key: source-v1-{{ .Branch }}-{{ .Revision }}
       - restore_cache:
           key: dependency-cache-{{ checksum "yarn.lock" }}
-
-      - run:
-          name: install-dependencies
-          command: yarn install
-
       - save_cache:
           key: dependency-cache-{{ checksum "yarn.lock" }}
           paths:
             - ./node_modules
+      - run:
+          name: update-npm
+          command: "sudo npm install -g yarn@latest"
+      - run:
+          name: install-dependencies
+          command: yarn install
 
+  test:
+    docker:
+      - image: circleci/node:12-stretch
+    working_directory: ~/graphql-todo-sample
+    steps:
+      - restore_cache:
+        key: source-v1-{{ .Branch }}-{{ .Revision }}
+      - restore_cache:
+        key: dependency-cache-{{ checksum "yarn.lock" }}
       - run:
           name: test
-          command: npm run test
+          command: yarn test
+
+workflows:
+  version: 2.1
+  build_and_test:
+    jobs:
+      - checkout_code
+      - build:
+          requires:
+            - checkout_code
+      - test:
+          requires:
+            - build
