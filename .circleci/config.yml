@@ -42,7 +42,7 @@ jobs:
           name: install-dependencies
           command: yarn install
       - save_cache:
-          key: dependency-cache-{{ checksum "yarn.lock" }}
+          key: npm-{{ checksum "yarn.lock" }}
           paths:
             - ./node_modules
   
