@@ -6,21 +6,21 @@ jobs:
     steps:
       - checkout
       - run:
-          name: update-npm
-          command: 'sudo npm install -g yarn@latest'
+        name: update-npm
+        command: 'sudo npm install -g yarn@latest'
       - restore_cache:
-          key: dependency-cache-{{ checksum "yarn-lock.json" }}
+        key: dependency-cache-{{ checksum "yarn-lock.json" }}
       - run:
-          name: install-npm-wee
-          command: yarn install
+        name: install-npm-wee
+        command: yarn install
       - save_cache:
-          key: dependency-cache-{{ checksum "yarn-lock.json" }}
-          paths:
-          - ./node_modules
+        key: dependency-cache-{{ checksum "yarn-lock.json" }}
+        paths:
+        - ./node_modules
       - persist_to_workspace:
-          root: .
-          paths:
-            - dist
+        root: .
+        paths:
+          - dist
   test:
     docker:
       - image: circleci/node:12-stretch
@@ -29,11 +29,11 @@ jobs:
       - attach_workspace:
           at: .
       - run:
-          name: Run tests
-          command: yarn test
+        name: Run tests
+        command: yarn test
       - run:
-          name: code-coverage
-          command: './node_modules/.bin/nyc report --reporter=text-lcov'
+        name: code-coverage
+        command: './node_modules/.bin/nyc report --reporter=text-lcov'
       - store_artifacts:
         path: test-results.xml
         prefix: tests
@@ -49,5 +49,5 @@ workflows:
     jobs:
       - build
       - test:
-          requires:
-            - build
+        requires:
+          - build
