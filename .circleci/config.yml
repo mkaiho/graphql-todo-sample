@@ -11,13 +11,6 @@ commands:
           name: Restore npm dependencies
           key: dependency-{{ checksum "yarn.lock" }}
 
-  save_npm:
-    steps:
-      - save_cache:
-          name: Cache npm dependencies
-          key: dependency-{{ checksum "yarn.lock" }}
-          paths:
-            - ~/graphql-todo-sample/node_modules
 jobs:
   build:
     executor:
@@ -28,7 +21,11 @@ jobs:
       - run:
           name: Install dependencies
           command: npm install
-      - save_npm
+      - save_cache:
+          name: Cache npm dependencies
+          key: dependency-{{ checksum "yarn.lock" }}
+          paths:
+            - ~/graphql-todo-sample/node_modules
   test:
     executor:
       name: default
