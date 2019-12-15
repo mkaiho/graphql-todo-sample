@@ -1,12 +1,28 @@
 version: 2.1
-jobs:
-  checkout_code:
-    docker:
-      - image: circleci/node:12-stretch
+executors:
+  default:
     working_directory: ~/graphql-todo-sample
+    docker:
+      - image: node:12
+
+commands:
+  restore_code:
     steps:
       - restore_cache:
+          name: Restore checkout codes
           key: source-v1-{{ .Branch }}-{{ .Revision }}
+  restore_npm:
+    steps:
+      - restore_cache:
+          name: Restore npm dependencies
+          key: npm-{{ checksum "yarn.lock" }}
+
+jobs:
+  checkout_code:
+    executor:
+      name: default
+    steps:
+      - restore_code
       - checkout
       - save_cache:
           key: source-v1-{{ .Branch }}-{{ .Revision }}
@@ -14,14 +30,11 @@ jobs:
             - ~/graphql-todo-sample
 
   build:
-    docker:
-      - image: circleci/node:12-stretch
-    working_directory: ~/graphql-todo-sample
+    executor:
+      name: default
     steps:
-      - restore_cache:
-          key: source-v1-{{ .Branch }}-{{ .Revision }}
-      - restore_cache:
-          key: dependency-cache-{{ checksum "yarn.lock" }}
+      - restore_code
+      - restore_npm
       - run:
           name: update-npm
           command: "sudo npm install -g yarn@latest"
@@ -34,14 +47,11 @@ jobs:
             - ./node_modules
   
   test:
-    docker:
-      - image: circleci/node:12-stretch
-    working_directory: ~/graphql-todo-sample
+    executor:
+      name: default
     steps:
-      - restore_cache:
-          key: source-v1-{{ .Branch }}-{{ .Revision }}
-      - restore_cache:
-          key: dependency-cache-{{ checksum "yarn.lock" }}
+      - restore_code
+      - restore_npm
       - run:
           name: test
           command: yarn test
