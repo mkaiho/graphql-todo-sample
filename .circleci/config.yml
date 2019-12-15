@@ -1,46 +1,29 @@
-version: 2.1
+version: 2
 jobs:
   build:
-    working_directory: ~/graqhql-todo-sample
     docker:
-      - image: circleci/node:12-stretch
+      - image: circleci/node:11.14.0
+
+    working_directory: ~/repo
+
     steps:
       - checkout
       - run:
-          name: Update npm
-          command: 'sudo npm install -g yarn@latest'
+          name: update-npm
+          command: "sudo npm install -g yarn@latest"
+
       - restore_cache:
           key: dependency-cache-{{ checksum "yarn.lock" }}
+
       - run:
-          name: Install npm wee
+          name: install-dependencies
           command: yarn install
+
       - save_cache:
           key: dependency-cache-{{ checksum "yarn.lock" }}
           paths:
-            - node_modules
-  test:
-    docker:
-      - image: circleci/node:12-stretch
-    steps:
-      - checkout
-      - run:
-          name: Test
-          command: npm test
-      - run:
-          name: Generate code coverage
-          command: './node_modules/.bin/nyc report --reporter=text-lcov'
-      - store_artifacts:
-          path: test-results.xml
-          prefix: tests
-      - store_artifacts:
-          path: coverage
-          prefix: coverage
+            - ./node_modules
 
-workflows:
-  version: 2.1
-  build_and_test:
-    jobs:
-      - build
-      - test:
-          requires:
-            - build
+      - run:
+          name: test
+          command: npm run test
