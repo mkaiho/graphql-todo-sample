@@ -21,6 +21,7 @@ jobs:
   checkout_code:
     executor:
       name: default
+    working_directory: ~/graphql-todo-sample
     steps:
       - restore_code
       - checkout
