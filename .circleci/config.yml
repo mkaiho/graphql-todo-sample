@@ -41,6 +41,9 @@ jobs:
       - run:
           name: install-dependencies
           command: yarn install
+      - run:
+          name: confirm
+          command: ls
       - save_cache:
           key: dependency-cache-{{ checksum "yarn.lock" }}
           paths:
