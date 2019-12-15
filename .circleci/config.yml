@@ -39,9 +39,9 @@ jobs:
     working_directory: ~/graphql-todo-sample
     steps:
       - restore_cache:
-        key: source-v1-{{ .Branch }}-{{ .Revision }}
+          key: source-v1-{{ .Branch }}-{{ .Revision }}
       - restore_cache:
-        key: dependency-cache-{{ checksum "yarn.lock" }}
+          key: dependency-cache-{{ checksum "yarn.lock" }}
       - run:
           name: test
           command: yarn test
