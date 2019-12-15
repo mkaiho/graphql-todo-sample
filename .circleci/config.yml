@@ -3,82 +3,45 @@ executors:
   default:
     working_directory: ~/graphql-todo-sample
     docker:
-      - image: node:12-stretch
-
+      - image: circleci/node:12-stretch
 commands:
-  restore_code:
-    steps:
-      - restore_cache:
-          name: Restore checkout codes
-          key: checkout-repo-{{ .Branch }}-{{ .Revision }}
   restore_npm:
     steps:
       - restore_cache:
           name: Restore npm dependencies
-          key: dependency-cache-{{ checksum "yarn.lock" }}
+          key: npm-{{ checksum "yarn.lock" }}
 
-jobs:
-  checkout_code:
-    executor:
-      name: default
-    working_directory: ~/graphql-todo-sample
+  save_npm:
     steps:
-      - restore_code
-      - checkout
       - save_cache:
-          name: Cache checkout codes
-          key: checkout-repo-{{ .Branch }}-{{ .Revision }}
+          name: Cache npm dependencies
+          key: npm-{{ checksum "yarn.lock" }}
           paths:
-            - ~/graphql-todo-sample
-
+            - ~/graphql-todo-sample/node_modules
+jobs:
   build:
     executor:
       name: default
     steps:
-      - restore_code
+      - checkout
       - restore_npm
       - run:
-          name: update-npm
-          command: "npm install -g yarn@latest"
-      - run:
-          name: install-dependencies
-          command: yarn install
-      - save_cache:
-          name: Cache npm dependencies
-          key: dependency-cache-{{ checksum "yarn.lock" }}
-          paths:
-            - ~/graphql-todo-sample/node_modules
-      - run:
-          name: pwd
-          command: pwd
-      - run:
-          name: confirm
-          command: "ls ~/graphql-todo-sample"
-    
+          name: Install dependencies
+          command: npm install
+      - save_npm
   test:
     executor:
       name: default
     steps:
-      - restore_code
+      - checkout
       - restore_npm
       - run:
-          name: pwd
-          command: pwd
-      - run:
-          name: confirm
-          command: "ls ~/graphql-todo-sample"
-      - run:
-          name: test
-          command: yarn test
-
+          name: Run test
+          command: npm run test
 workflows:
-  version: 2.1
   build_and_test:
     jobs:
-      - checkout_code
-      - build:
-          requires:
-            - checkout_code
+      - build
       - test:
           requires:
             - build
