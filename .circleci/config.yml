@@ -3,7 +3,7 @@ executors:
   default:
     working_directory: ~/graphql-todo-sample
     docker:
-      - image: node:12
+      - image: node:12-stretch
 
 commands:
   restore_code:
@@ -37,7 +37,7 @@ jobs:
       - restore_npm
       - run:
           name: update-npm
-          command: "npm install -g yarn@latest"
+          command: "sodo npm install -g yarn@latest"
       - run:
           name: install-dependencies
           command: yarn install
