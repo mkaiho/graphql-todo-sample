@@ -26,6 +26,7 @@ jobs:
       - restore_code
       - checkout
       - save_cache:
+          name: Cache checkout codes
           key: checkout-repo-{{ .Branch }}-{{ .Revision }}
           paths:
             - ~/graphql-todo-sample
@@ -43,6 +44,7 @@ jobs:
           name: install-dependencies
           command: yarn install
       - save_cache:
+          name: Cache npm dependencies
           key: dependency-cache-{{ checksum "yarn.lock" }}
           paths:
             - ~/graphql-todo-sample/node_modules
