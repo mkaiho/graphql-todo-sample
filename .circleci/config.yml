@@ -39,6 +39,7 @@ jobs:
           name: Run test
           command: npm run test
 workflows:
+  version: 2.1
   build_and_test:
     jobs:
       - build
