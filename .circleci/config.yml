@@ -10,7 +10,7 @@ commands:
     steps:
       - restore_cache:
           name: Restore checkout codes
-          key: checkout-repo--{{ .Branch }}-{{ .Revision }}
+          key: checkout-repo-{{ .Branch }}-{{ .Revision }}
   restore_npm:
     steps:
       - restore_cache:
@@ -25,7 +25,7 @@ jobs:
       - restore_code
       - checkout
       - save_cache:
-          key: source-v1-{{ .Branch }}-{{ .Revision }}
+          key: checkout-repo-{{ .Branch }}-{{ .Revision }}
           paths:
             - ~/graphql-todo-sample
 
@@ -52,9 +52,6 @@ jobs:
     steps:
       - restore_code
       - restore_npm
-      - run:
-          name: confirm
-          command: ls
       - run:
           name: test
           command: yarn test
