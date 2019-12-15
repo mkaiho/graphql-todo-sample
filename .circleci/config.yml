@@ -45,7 +45,13 @@ jobs:
           key: dependency-cache-{{ checksum "yarn.lock" }}
           paths:
             - ~/graphql-todo-sample/node_modules
-  
+      - run:
+        name: pwd
+        command: pwd
+      - run:
+          name: confirm
+          command: "ls ~/graphql-todo-sample"
+    
   test:
     executor:
       name: default
