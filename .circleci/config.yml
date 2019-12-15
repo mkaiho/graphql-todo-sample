@@ -22,17 +22,17 @@ jobs:
           key: source-v1-{{ .Branch }}-{{ .Revision }}
       - restore_cache:
           key: dependency-cache-{{ checksum "yarn.lock" }}
-      - save_cache:
-          key: dependency-cache-{{ checksum "yarn.lock" }}
-          paths:
-            - ./node_modules
       - run:
           name: update-npm
           command: "sudo npm install -g yarn@latest"
       - run:
           name: install-dependencies
           command: yarn install
-
+      - save_cache:
+          key: dependency-cache-{{ checksum "yarn.lock" }}
+          paths:
+            - ./node_modules
+  
   test:
     docker:
       - image: circleci/node:12-stretch
