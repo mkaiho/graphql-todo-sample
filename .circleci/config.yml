@@ -56,8 +56,8 @@ jobs:
           name: pwd
           command: pwd
       - run:
-        name: confirm
-        command: ls
+          name: confirm
+          command: ls
       - run:
           name: test
           command: yarn test
