@@ -3,6 +3,7 @@ jobs:
   build:
     docker:
       - image: circleci/node:12-stretch
+    working_directory: ~/graphql-todo-sample
     steps:
       - checkout
       - run:
@@ -20,6 +21,7 @@ jobs:
   test:
     docker:
       - image: circleci/node:12-stretch
+    working_directory: ~/graphql-todo-sample
     steps:
       - checkout
       - run:
