@@ -9,7 +9,7 @@ commands:
     steps:
       - restore_cache:
           name: Restore npm dependencies
-          key: dependency-cache-{{ checksum "yarn.lock" }}
+          key: dependency-{{ checksum "yarn.lock" }}
 
 jobs:
   build:
@@ -20,10 +20,10 @@ jobs:
       - restore_npm
       - run:
           name: Install dependencies
-          command: yarn install
+          command: npm install
       - save_cache:
           name: Cache npm dependencies
-          key: dependency-cache-{{ checksum "yarn.lock" }}
+          key: dependency-{{ checksum "yarn.lock" }}
           paths:
             - ~/graphql-todo-sample/node_modules
   test:
@@ -34,7 +34,7 @@ jobs:
       - restore_npm
       - run:
           name: Run test
-          command: yarn run test
+          command: npm run test
 workflows:
   version: 2.1
   build_and_test:
